@@ -1,22 +1,28 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
     [Header("Controller Settings")]
-    [SerializeField] private float moveSpeed;
-    [SerializeField] private float jumpHeight;
+    [SerializeField] private float moveSpeed = 20f;
+    [SerializeField] private float jumpHeight = 2f;
     [SerializeField] private float gravity = 9.81f;
 
     [Header("Camera Settings")]
     [SerializeField] private float cameraSensitivity = 1f;
+
+    [Header("CombatSettings")]
+    [SerializeField] private float hitRadius;
+    [SerializeField] private LayerMask enemiesLayer;
 
     private CharacterController characterController;
     private Camera mainCamera;
 
     private Vector3 moveDirection;
     private Vector3 moveVelocity;
+    private bool isAttacking;
 
     private void Awake()
     {
@@ -40,6 +46,7 @@ public class Player : MonoBehaviour
         HandleCamera();
         HandleMovement();
         HandleCursor();
+        HandleCombat();
     }
 
     private void HandleMovement()
@@ -95,6 +102,7 @@ public class Player : MonoBehaviour
         // Look up and down
         Vector3 currentCameraRotation = mainCamera.transform.localEulerAngles;
         currentCameraRotation.x -= mouseY * cameraSensitivity;
+        currentCameraRotation.x = Mathf.Clamp(currentCameraRotation.x, 15, 28);
         mainCamera.transform.localRotation = Quaternion.AngleAxis(currentCameraRotation.x, Vector3.right);
     }
 
@@ -104,5 +112,37 @@ public class Player : MonoBehaviour
         {
             Cursor.lockState = CursorLockMode.None;
         }
+    }
+
+    private void HandleCombat()
+    {
+        if (Input.GetMouseButtonDown(0) && !isAttacking)
+        {
+            StartCoroutine("DebugCombat");
+
+            Collider[] enemiesHitColliderArray = Physics.OverlapSphere(transform.position, hitRadius, enemiesLayer);
+            foreach (Collider enemy in enemiesHitColliderArray)
+            {
+                if (enemy != null)
+                {
+                    enemy.GetComponent<MeshRenderer>().material.color = Color.black;
+                }
+            }
+        }
+    }
+
+    private IEnumerator DebugCombat()
+    {
+        isAttacking = true;
+        GetComponent<MeshRenderer>().material.color = Color.red;
+
+        yield return new WaitForSeconds(1f);
+        isAttacking = false;
+        GetComponent<MeshRenderer>().material.color = Color.white;
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.DrawWireSphere(transform.position, hitRadius);
     }
 }
