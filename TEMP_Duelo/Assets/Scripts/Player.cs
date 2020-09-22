@@ -14,31 +14,48 @@ public class Player : MonoBehaviour
     [SerializeField] private float cameraSensitivity = 1f;
 
     [Header("CombatSettings")]
+    [SerializeField] private int attackDamage;
     [SerializeField] private float hitRadius;
     [SerializeField] private LayerMask enemiesLayer;
+    [SerializeField] private float attackTimerMax;
 
     private CharacterController characterController;
     private Camera mainCamera;
-
+    private HealthSystem healthSystem;
+    private Transform attackTransform;
     private Vector3 moveDirection;
     private Vector3 moveVelocity;
-    private bool isAttacking;
+    private float attackTimer;
+    private bool canAttack;
 
     private void Awake()
     {
         characterController = GetComponent<CharacterController>();
+        healthSystem = GetComponent<HealthSystem>();
         mainCamera = Camera.main;
+        attackTransform = transform.Find("attackTransform");
 
         if (characterController == null)
         {
-            Debug.LogError("The character controller is NULL.");
+            Debug.LogError("The Character Controller is NULL.");
         }
         if (mainCamera == null)
         {
-            Debug.LogError("The main camera is NULL.");
+            Debug.LogError("The Main Camera is NULL.");
+        }
+        if (attackTransform == null)
+        {
+            Debug.LogError("The Attack Transform is NULL.");
         }
 
         Cursor.lockState = CursorLockMode.Locked;
+
+        healthSystem.OnDamaged += HealthSystem_OnDamaged;
+    }
+
+    private void HealthSystem_OnDamaged(object sender, System.EventArgs e)
+    {
+        Debug.Log("Damaging Player: " + healthSystem.GetHealthAmount() + " hp left.");
     }
 
     private void Update()
@@ -116,33 +133,34 @@ public class Player : MonoBehaviour
 
     private void HandleCombat()
     {
-        if (Input.GetMouseButtonDown(0) && !isAttacking)
+        attackTimer -= Time.deltaTime;
+        if (attackTimer <= 0f)
         {
-            StartCoroutine("DebugCombat");
+            canAttack = true;
+            attackTimer += attackTimerMax;
+        }
 
-            Collider[] enemiesHitColliderArray = Physics.OverlapSphere(transform.position, hitRadius, enemiesLayer);
-            foreach (Collider enemy in enemiesHitColliderArray)
+        if (Input.GetMouseButtonDown(0) && canAttack)
+        {
+            Debug.Log("Attacking...");
+            canAttack = false;
+
+            Collider[] enemiesHitColliderArray = Physics.OverlapSphere(attackTransform.position, hitRadius, enemiesLayer);
+            foreach (Collider enemyHitCollider in enemiesHitColliderArray)
             {
-                if (enemy != null)
+                if (enemyHitCollider != null)
                 {
-                    enemy.GetComponent<MeshRenderer>().material.color = Color.black;
+                    enemyHitCollider.GetComponent<HealthSystem>().Damage(attackDamage);
                 }
             }
         }
     }
 
-    private IEnumerator DebugCombat()
-    {
-        isAttacking = true;
-        GetComponent<MeshRenderer>().material.color = Color.red;
-
-        yield return new WaitForSeconds(1f);
-        isAttacking = false;
-        GetComponent<MeshRenderer>().material.color = Color.white;
-    }
-
     private void OnDrawGizmosSelected()
     {
-        Gizmos.DrawWireSphere(transform.position, hitRadius);
+        if (attackTransform != null)
+        {
+            Gizmos.DrawWireSphere(attackTransform.position, hitRadius);
+        }
     }
 }
