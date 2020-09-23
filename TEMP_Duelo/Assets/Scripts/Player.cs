@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -116,11 +115,11 @@ public class Player : MonoBehaviour
         currentRotation.y += mouseX * cameraSensitivity;
         transform.localRotation = Quaternion.AngleAxis(currentRotation.y, Vector3.up);
 
-        // Look up and down
-        Vector3 currentCameraRotation = mainCamera.transform.localEulerAngles;
-        currentCameraRotation.x -= mouseY * cameraSensitivity;
-        currentCameraRotation.x = Mathf.Clamp(currentCameraRotation.x, 15, 28);
-        mainCamera.transform.localRotation = Quaternion.AngleAxis(currentCameraRotation.x, Vector3.right);
+        //// Look up and down
+        //Vector3 currentCameraRotation = mainCamera.transform.localEulerAngles;
+        //currentCameraRotation.x -= mouseY * cameraSensitivity;
+        //currentCameraRotation.x = Mathf.Clamp(currentCameraRotation.x, 15, 28);
+        //mainCamera.transform.localRotation = Quaternion.AngleAxis(currentCameraRotation.x, Vector3.right);
     }
 
     private void HandleCursor()
