@@ -9,12 +9,10 @@ public class OptionsUI : MonoBehaviour
 {
     /* CHANGES:
      * Made Singleton
+     * Access to SoundManager and MusicManager through Instance instead of references
      */
 
     public static OptionsUI Instance { get; private set; }
-
-    [SerializeField] private SoundManager soundManager;
-    [SerializeField] private MusicManager musicManager;
 
     private TextMeshProUGUI soundVolumeText;
     private TextMeshProUGUI musicVolumeText;
@@ -28,22 +26,22 @@ public class OptionsUI : MonoBehaviour
 
         transform.Find("soundIncreaseButton").GetComponent<Button>().GetComponent<Button>().onClick.AddListener(() =>
         {
-            soundManager.IncreaseVolume();
+            SoundManager.Instance.IncreaseVolume();
             UpdateSoundVolumeText();
         });
         transform.Find("soundDecreaseButton").GetComponent<Button>().GetComponent<Button>().onClick.AddListener(() =>
         {
-            soundManager.DecreaseVolume();
+            SoundManager.Instance.DecreaseVolume();
             UpdateSoundVolumeText();
         });
         transform.Find("musicIncreaseButton").GetComponent<Button>().GetComponent<Button>().onClick.AddListener(() =>
         {
-            musicManager.IncreaseVolume();
+            MusicManager.Instance.IncreaseVolume();
             UpdateMusicVolumeText();
         });
         transform.Find("musicDecreaseButton").GetComponent<Button>().GetComponent<Button>().onClick.AddListener(() =>
         {
-            musicManager.DecreaseVolume();
+            MusicManager.Instance.DecreaseVolume();
             UpdateMusicVolumeText();
         });
         transform.Find("replayButton").GetComponent<Button>().GetComponent<Button>().onClick.AddListener(() =>
@@ -71,12 +69,12 @@ public class OptionsUI : MonoBehaviour
 
     private void UpdateSoundVolumeText()
     {
-        soundVolumeText.SetText(Mathf.RoundToInt(soundManager.GetVolume() * 10).ToString());
+        soundVolumeText.SetText(Mathf.RoundToInt(SoundManager.Instance.GetVolume() * 10).ToString());
     }
 
     private void UpdateMusicVolumeText()
     {
-        musicVolumeText.SetText(Mathf.RoundToInt(musicManager.GetVolume() * 10).ToString());
+        musicVolumeText.SetText(Mathf.RoundToInt(MusicManager.Instance.GetVolume() * 10).ToString());
     }
 
     public void ToggleVisible()

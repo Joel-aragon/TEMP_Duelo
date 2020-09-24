@@ -475,10 +475,10 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
-  Loop: 1
+  Loop: 0
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -1002,8 +1002,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c108f5452c3c01b48a57ce17510ab168, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  soundManager: {fileID: 2054134901}
-  musicManager: {fileID: 332951540}
 --- !u!1 &646702580
 GameObject:
   m_ObjectHideFlags: 0
