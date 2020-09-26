@@ -7,12 +7,26 @@ public static class GameSceneManager
 {
     public enum Scene
     {
+        StaticScene,
         MainMenuScene,
-        NegationScene
+        NegationScene,
+        AngerScene,
+        NegotiationScene,
+        DepressionScene,
+        AcceptanceScene
     }
 
     public static void Load(Scene scene)
     {
-        SceneManager.LoadScene(scene.ToString());
+        if(scene == Scene.MainMenuScene)
+        {
+            SceneManager.LoadScene(scene.ToString());
+        }
+        else
+        {
+            SceneManager.LoadScene(scene.ToString());
+            SceneManager.LoadScene(Scene.StaticScene.ToString(), LoadSceneMode.Additive);
+        }
+
     }
 }

@@ -11,7 +11,6 @@ public class MainMenuUI : MonoBehaviour
         transform.Find("playButton").GetComponent<Button>().onClick.AddListener(() =>
         {
             GameSceneManager.Load(GameSceneManager.Scene.NegationScene);
-            SceneManager.LoadScene("StaticScene", LoadSceneMode.Additive);
         });
         transform.Find("quitButton").GetComponent<Button>().onClick.AddListener(() =>
         {

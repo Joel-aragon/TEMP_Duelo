@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             OptionsUI.Instance.ToggleVisible();
+            DebugUI.Instance.ToggleVisible();
         }
     }
 }

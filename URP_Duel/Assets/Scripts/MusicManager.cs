@@ -14,7 +14,7 @@ public class MusicManager : MonoBehaviour
 
     public enum Music
     {
-        // TODO
+        // Todo
     }
 
     private AudioSource audioSource;

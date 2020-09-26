@@ -8,7 +8,7 @@ public class SoundManager : MonoBehaviour
 
     public enum Sound
     {
-        // TODO
+        // Todo
     }
 
     private AudioSource audioSource;

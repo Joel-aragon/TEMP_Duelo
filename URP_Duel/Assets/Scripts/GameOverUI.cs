@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class GameOverUI : MonoBehaviour
 {
-    public GameOverUI Instance { get; private set; }
+    public static GameOverUI Instance { get; private set; }
 
     private void Awake()
     {
@@ -25,7 +25,7 @@ public class GameOverUI : MonoBehaviour
         Hide();
     }
 
-    private void Show()
+    public void Show()
     {
         gameObject.SetActive(true);
     }
