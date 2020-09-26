@@ -539,8 +539,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 287417577}
-  m_LocalRotation: {x: 0.13505939, y: -0.0000000147646295, z: 0.0000000020125481,
-    w: 0.9908376}
+  m_LocalRotation: {x: 0.1350594, y: 2.6482595e-15, z: 6.19938e-15, w: 0.9908376}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -614,7 +613,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 375651654}
-  m_LocalRotation: {x: 0.11701424, y: 0.00000001708818, z: -0.0000000020133908, w: 0.99313027}
+  m_LocalRotation: {x: 0.11701424, y: -0.000000017088178, z: 0.0000000020133926, w: 0.99313027}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -737,7 +736,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7d54407902583e488bacd41db84a818, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmountMax: 50
+  healthAmountMax: 100
 --- !u!114 &550059801
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1226,7 +1225,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1272011121}
-  m_LocalRotation: {x: 0.117014244, y: 0.00000003417636, z: -0.000000004026784, w: 0.99313027}
+  m_LocalRotation: {x: 0.117014244, y: -0.00000003417636, z: 0.000000004026784, w: 0.99313027}
   m_LocalPosition: {x: 0, y: 7.5, z: -18}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -1666,7 +1665,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1860202856}
   m_Layer: 0
-  m_Name: attackPosition
+  m_Name: attackTransform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1776,7 +1775,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2124869854}
   m_Layer: 9
-  m_Name: attackPosition
+  m_Name: attackTransform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

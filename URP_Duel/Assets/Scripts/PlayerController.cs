@@ -14,14 +14,14 @@ public class PlayerController : MonoBehaviour
 
     private PlayerMovementSystem playerMovementSystem;
     private PlayerJumpSystem playerJumpSystem;
-    private CombatSystem combatSystem;
+    private MeleeAttackSystem meleeAttackSystem;
     private State state;
 
     private void Awake()
     {
         playerMovementSystem = GetComponent<PlayerMovementSystem>();
         playerJumpSystem = GetComponent<PlayerJumpSystem>();
-        combatSystem = GetComponent<CombatSystem>();
+        meleeAttackSystem = GetComponent<MeleeAttackSystem>();
 
         state = State.Alive;
     }
@@ -104,7 +104,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetMouseButtonDown(0) && canAttack)
         {
             canAttack = false;
-            combatSystem.Attack();
+            meleeAttackSystem.Attack();
         }
     }
 }

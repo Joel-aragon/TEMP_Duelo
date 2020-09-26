@@ -29,7 +29,7 @@ public class NegotiationSetup : MonoBehaviour
 
     private void Instance_OnWrongAnswer(object sender, System.EventArgs e)
     {
-        healthSystem.Damage(25);
+        healthSystem.Damage(50);
     }
 
     private void NegotiationUI_OnRightAnswer(object sender, System.EventArgs e)

@@ -99,7 +99,7 @@ LightmapSettings:
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 112000000, guid: 018a078039cece94c8171637e3c866c1,
     type: 2}
-  m_UseShadowmask: 0
+  m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -508,7 +508,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 375651654}
-  m_LocalRotation: {x: 0.11701424, y: 0.000000017088176, z: -0.0000000020133917, w: 0.99313027}
+  m_LocalRotation: {x: 0.11701424, y: -0.000000017088182, z: 0.0000000020133917, w: 0.99313027}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -851,7 +851,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7d54407902583e488bacd41db84a818, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmountMax: 50
+  healthAmountMax: 100
 --- !u!114 &550059801
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1249,7 +1249,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55db1f9f4d7e83447ad5a6458a9909c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageAmount: 20
+  damageAmount: 10
   hitRadius: 3
   targetLayer:
     serializedVersion: 2
@@ -1266,7 +1266,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7d54407902583e488bacd41db84a818, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthAmountMax: 100
+  healthAmountMax: 50
 --- !u!114 &863521639
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1280,6 +1280,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 550059795}
+  searchDistance: 4
+  searchAngle: 10
+  timerAttackMax: 2
+  timerSearchMax: 0.5
+  turnSmoothTime: 0.5
 --- !u!54 &863521640
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1519,7 +1524,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1095434360}
   m_Layer: 0
-  m_Name: attackPosition
+  m_Name: attackTransform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1533,7 +1538,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1095434359}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 2}
+  m_LocalPosition: {x: 0, y: 0, z: 3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 863521634}
@@ -1742,7 +1747,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1272011121}
-  m_LocalRotation: {x: 0.117014244, y: 0.00000003417636, z: -0.000000004026784, w: 0.99313027}
+  m_LocalRotation: {x: 0.117014244, y: -0.00000003417636, z: 0.000000004026784, w: 0.99313027}
   m_LocalPosition: {x: 0, y: 7.5, z: -18}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -2543,7 +2548,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1860202856}
   m_Layer: 0
-  m_Name: attackPosition
+  m_Name: attackTransform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

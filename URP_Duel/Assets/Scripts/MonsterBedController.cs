@@ -8,11 +8,11 @@ public class MonsterBedController : MonoBehaviour
     private float timerAttack;
     private bool canAttack = true;
 
-    private CombatSystem combatSystem;
+    private MeleeAttackSystem meleeAttackSystem;
 
     private void Awake()
     {
-        combatSystem = GetComponent<CombatSystem>();
+        meleeAttackSystem = GetComponent<MeleeAttackSystem>();
     }
 
     private void Update()
@@ -20,7 +20,7 @@ public class MonsterBedController : MonoBehaviour
         if (canAttack)
         {
             canAttack = false;
-            combatSystem.Attack();
+            meleeAttackSystem.Attack();
         }
         else
         {
