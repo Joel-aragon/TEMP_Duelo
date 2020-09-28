@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System;
+﻿using System;
 using UnityEngine;
 
 public class HealthSystem : MonoBehaviour
@@ -21,8 +19,6 @@ public class HealthSystem : MonoBehaviour
     {
         healthAmount -= damageAmount;
         healthAmount = Mathf.Clamp(healthAmount, 0, healthAmountMax);
-
-        Debug.Log(gameObject.name + " damaged! " + healthAmount + " hp left...");
 
         OnDamaged?.Invoke(this, EventArgs.Empty);
 

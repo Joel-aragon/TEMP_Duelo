@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class MeleeAttackSystem : MonoBehaviour
 {
@@ -13,16 +11,10 @@ public class MeleeAttackSystem : MonoBehaviour
     private void Awake()
     {
         attackTransform = transform.Find("attackTransform");
-
-        if (attackTransform == null)
-        {
-            Debug.LogError("The Attack Transform is NULL!");
-        }
     }
 
     public void Attack()
     {
-        Debug.Log(gameObject.name + " attacking...");
         Collider[] hits = Physics.OverlapSphere(attackTransform.position, hitRadius, targetLayer);
         foreach (Collider hit in hits)
         {

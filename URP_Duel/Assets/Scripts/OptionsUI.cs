@@ -1,18 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
+using System;
 
 public class OptionsUI : MonoBehaviour
 {
-    /* CHANGES:
-     * Made Singleton
-     * Access to SoundManager and MusicManager through Instance instead of references
-     */
-
     public static OptionsUI Instance { get; private set; }
+
+    public EventHandler OnActiveOptionsUI;
+    public EventHandler OnInactiveOptionsUI;
 
     private TextMeshProUGUI soundVolumeText;
     private TextMeshProUGUI musicVolumeText;
@@ -64,6 +61,7 @@ public class OptionsUI : MonoBehaviour
     private void Start()
     {
         UpdateSoundVolumeText();
+        UpdateMusicVolumeText();
         gameObject.SetActive(false);
     }
 
@@ -83,11 +81,17 @@ public class OptionsUI : MonoBehaviour
 
         if (gameObject.activeSelf)
         {
+            OnActiveOptionsUI?.Invoke(this, EventArgs.Empty);
             Time.timeScale = 0f;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
         }
         else
         {
+            OnInactiveOptionsUI?.Invoke(this, EventArgs.Empty);
             Time.timeScale = 1f;
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
         }
     }
 }

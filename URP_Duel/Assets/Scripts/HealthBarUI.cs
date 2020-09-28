@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class HealthBarUI : MonoBehaviour
 {
@@ -35,7 +33,7 @@ public class HealthBarUI : MonoBehaviour
 
     private void UpdateHealthBarVisible()
     {
-        if(healthSystem.IsFullHealth())
+        if (healthSystem.IsFullHealth())
         {
             gameObject.SetActive(false);
         }

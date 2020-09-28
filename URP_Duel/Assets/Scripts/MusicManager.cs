@@ -1,25 +1,23 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class MusicManager : MonoBehaviour
 {
-    /* CHANGES:
-     * Singleton
-     * Load music from Resources
-     * Play music
-     */
-
     public static MusicManager Instance { get; private set; }
 
     public enum Music
     {
-        // Todo
+        acceptanceMusic,
+        angerMusic,
+        depressionMusic,
+        depressionMusicAlt,
+        negationMusic,
+        storyboardMusic
     }
 
     private AudioSource audioSource;
     private Dictionary<Music, AudioClip> musicAudioClipDictionary;
-    private float volume = 0.5f;
+    private float volume = 0.1f;
 
     private void Awake()
     {

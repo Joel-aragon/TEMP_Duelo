@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -7,6 +6,8 @@ using UnityEngine.UI;
 public class GameOverUI : MonoBehaviour
 {
     public static GameOverUI Instance { get; private set; }
+
+    private TextMeshProUGUI infoText;
 
     private void Awake()
     {
@@ -22,12 +23,35 @@ public class GameOverUI : MonoBehaviour
             GameSceneManager.Load(GameSceneManager.Scene.MainMenuScene);
         });
 
+        infoText = transform.Find("infoText").GetComponent<TextMeshProUGUI>();
+
         Hide();
     }
 
     public void Show()
     {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
         gameObject.SetActive(true);
+
+        int activeSceneBuildIndex = SceneManager.GetActiveScene().buildIndex;
+
+        string gameOverText = "";
+        switch (activeSceneBuildIndex)
+        {
+            case 1:
+                gameOverText = "Dani siempre negó la realidad.";
+                break;
+            case 2:
+                gameOverText = "Dani se pasó la vida enfadado.";
+                break;
+            case 4:
+                gameOverText = "Dani tuvo una depresión de caballo.";
+                break;
+        }
+
+        infoText.SetText(gameOverText);
     }
 
     private void Hide()

@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class TearProjectile : MonoBehaviour
 {
@@ -37,6 +35,7 @@ public class TearProjectile : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        ParticleSystemManager.Instance.CreateParticle(ParticleSystemManager.Particle.pfTearParticles, transform.position);
         if(other.CompareTag("Player"))
         {
             HealthSystem healthSystem = other.GetComponent<HealthSystem>();
@@ -45,6 +44,10 @@ public class TearProjectile : MonoBehaviour
                 healthSystem.Damage(damageAmount);
                 Destroy(gameObject);
             }
+        }
+        else if (other.CompareTag("Ground"))
+        {
+            Destroy(gameObject);
         }
     }
 }

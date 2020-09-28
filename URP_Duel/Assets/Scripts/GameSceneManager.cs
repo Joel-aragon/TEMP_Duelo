@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.SceneManagement;
+﻿using UnityEngine.SceneManagement;
 
 public static class GameSceneManager
 {
@@ -18,7 +15,7 @@ public static class GameSceneManager
 
     public static void Load(Scene scene)
     {
-        if(scene == Scene.MainMenuScene)
+        if (scene == Scene.MainMenuScene)
         {
             SceneManager.LoadScene(scene.ToString());
         }

@@ -1,48 +1,112 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public enum State
+    public static EventHandler OnPlayerDead;
+
+    private enum State
     {
-        Alive,
-        Dead
+        Play,
+        Dead,
+        Wait
     }
 
+    private State state;
+
     [SerializeField] private float timerAttackMax = 1f;
+    private float timerDie = 3f;
     private float timerAttack;
     private bool canAttack = true;
 
     private PlayerMovementSystem playerMovementSystem;
     private PlayerJumpSystem playerJumpSystem;
     private MeleeAttackSystem meleeAttackSystem;
-    private State state;
+    private HealthSystem healthSystem;
+    private Animator animator;
 
     private void Awake()
     {
         playerMovementSystem = GetComponent<PlayerMovementSystem>();
         playerJumpSystem = GetComponent<PlayerJumpSystem>();
         meleeAttackSystem = GetComponent<MeleeAttackSystem>();
+        healthSystem = GetComponent<HealthSystem>();
+        animator = transform.Find("pfPlayerModelAltAlt").GetComponent<Animator>();
 
-        state = State.Alive;
+        healthSystem.OnDamaged += HealthSystem_OnDamaged;
+        healthSystem.OnDied += HealthSystem_OnDied;
+
+        state = State.Wait;
+    }
+
+    private void Start()
+    {
+        StoryboardUI.Instance.OnInactiveStoryboardUI += StoryboardUI_OnInactiveStoryboardUI;
+
+        OptionsUI.Instance.OnActiveOptionsUI += OptionsUI_OnActiveOptionsUI;
+        OptionsUI.Instance.OnInactiveOptionsUI += OptionsUI_OnInactiveOptionsUI;
+    }
+
+    private void HealthSystem_OnDamaged(object sender, EventArgs e)
+    {
+        SoundManager.Instance.PlaySound(SoundManager.Sound.playerDamaged, SoundManager.Sound.playerDamagedAlt, transform.position);
+    }
+
+    private void HealthSystem_OnDied(object sender, EventArgs e)
+    {
+        healthSystem.OnDamaged -= HealthSystem_OnDamaged;
+        healthSystem.OnDied -= HealthSystem_OnDied;
+
+        StoryboardUI.Instance.OnInactiveStoryboardUI -= StoryboardUI_OnInactiveStoryboardUI;
+
+        OptionsUI.Instance.OnActiveOptionsUI -= OptionsUI_OnActiveOptionsUI;
+        OptionsUI.Instance.OnInactiveOptionsUI -= OptionsUI_OnInactiveOptionsUI;
+
+        state = State.Dead;
+        animator.SetTrigger("die");
+
+        OnPlayerDead?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void StoryboardUI_OnInactiveStoryboardUI(object sender, EventArgs e)
+    {
+        state = State.Play;
+    }
+
+    private void OptionsUI_OnActiveOptionsUI(object sender, EventArgs e)
+    {
+        state = State.Wait;
+    }
+
+    private void OptionsUI_OnInactiveOptionsUI(object sender, EventArgs e)
+    {
+        state = State.Play;
     }
 
     private void Update()
     {
         switch (state)
         {
-            case State.Alive:
+            case State.Play:
                 HandleInputMovement();
                 HandleInputJump();
                 HandleInputAttack();
                 break;
+
             case State.Dead:
+                timerDie -= Time.deltaTime;
+                {
+                    if (timerDie <= 0f)
+                    {
+                        state = State.Wait;
+                        GameOverUI.Instance.Show();
+                    }
+                }
+                break;
+
+            case State.Wait:
                 break;
         }
-    }
-
-    public void SetState(State state)
-    {
-        this.state = state;
     }
 
     private void HandleInputMovement()
@@ -71,7 +135,15 @@ public class PlayerController : MonoBehaviour
 
         if (IsMoving(moveDirection))
         {
+            if (playerJumpSystem.IsGrounded())
+            {
+                animator.SetBool("isWalking", true);
+            }
             playerMovementSystem.HandleMovement(moveDirection);
+        }
+        else
+        {
+            animator.SetBool("isWalking", false);
         }
     }
 
@@ -85,6 +157,8 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space) && playerJumpSystem.IsGrounded())
         {
+            SoundManager.Instance.PlaySound(SoundManager.Sound.playerJump, SoundManager.Sound.playerJumpAlt, transform.position);
+            animator.SetTrigger("jump");
             playerJumpSystem.HandleJump();
         }
     }
@@ -103,8 +177,18 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0) && canAttack)
         {
+            SoundManager.Instance.PlaySound(SoundManager.Sound.playerAttack, SoundManager.Sound.playerAttackAlt, transform.position);
+            animator.SetTrigger("attack");
             canAttack = false;
             meleeAttackSystem.Attack();
         }
+    }
+
+    private void OnDestroy()
+    {
+        StoryboardUI.Instance.OnInactiveStoryboardUI -= StoryboardUI_OnInactiveStoryboardUI;
+
+        OptionsUI.Instance.OnActiveOptionsUI -= OptionsUI_OnActiveOptionsUI;
+        OptionsUI.Instance.OnInactiveOptionsUI -= OptionsUI_OnInactiveOptionsUI;
     }
 }

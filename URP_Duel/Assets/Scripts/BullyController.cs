@@ -1,7 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.AI;
+using System;
 
 public class BullyController : MonoBehaviour
 {
@@ -11,20 +10,10 @@ public class BullyController : MonoBehaviour
         Search,
         Turn,
         Attack,
+        Dead,
+        Wait
     }
-    private State currentState;
-    private State CurrentState
-    {
-        get
-        {
-            return currentState;
-        }
-        set
-        {
-            currentState = value;
-            Debug.Log(value);
-        }
-    }
+    private State state;
 
     [SerializeField] private Transform target;
     [SerializeField] private float searchDistance = 4f;
@@ -35,32 +24,79 @@ public class BullyController : MonoBehaviour
 
     private NavMeshAgent navMeshAgent;
     private MeleeAttackSystem meleeAttackSystem;
+    private HealthSystem healthSystem;
+    private Animator animator;
     private float timerAttack;
     private bool canAttack = true;
     private float timerSearch;
     private bool canSearch = true;
     private float turnSmoothVelocity;
+    private float timerDie = 3f;
 
     private void Awake()
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
         meleeAttackSystem = GetComponent<MeleeAttackSystem>();
-
-        CurrentState = State.Chase;
+        healthSystem = GetComponent<HealthSystem>();
+        animator = transform.Find("pfBullyModelAltAlt").GetComponent<Animator>();
 
         timerAttack = timerAttackMax;
         timerSearch = timerSearchMax;
+
+        healthSystem.OnDamaged += HealthSystem_OnDamaged;
+        healthSystem.OnDied += HealthSystem_OnDied;
+
+        state = State.Wait;
+    }
+
+    private void Start()
+    {
+        StoryboardUI.Instance.OnInactiveStoryboardUI += StoryboardUI_OnInactiveStoryboardUI;
+
+        PlayerController.OnPlayerDead += PlayerController_OnPlayerDead;
+    }
+
+    private void HealthSystem_OnDamaged(object sender, System.EventArgs e)
+    {
+        SoundManager.Instance.PlaySound(SoundManager.Sound.bullyDamaged, SoundManager.Sound.bullyDamagedAlt, transform.position);
+    }
+
+    private void HealthSystem_OnDied(object sender, System.EventArgs e)
+    {
+        SoundManager.Instance.PlaySound(SoundManager.Sound.bullyDie, transform.position);
+
+        StoryboardUI.Instance.OnInactiveStoryboardUI -= StoryboardUI_OnInactiveStoryboardUI;
+
+        PlayerController.OnPlayerDead -= PlayerController_OnPlayerDead;
+
+        healthSystem.OnDamaged -= HealthSystem_OnDamaged;
+        healthSystem.OnDied -= HealthSystem_OnDied;
+
+        animator.SetTrigger("die");
+        state = State.Dead;
+    }
+
+    private void StoryboardUI_OnInactiveStoryboardUI(object sender, EventArgs e)
+    {
+        state = State.Chase;
+    }
+
+    private void PlayerController_OnPlayerDead(object sender, System.EventArgs e)
+    {
+        SoundManager.Instance.PlaySound(SoundManager.Sound.bullyDefault, transform.position);
+        state = State.Wait;
     }
 
     private void Update()
     {
-        switch (CurrentState)
+        switch (state)
         {
             case State.Chase:
+                animator.SetBool("isWalking", true);
                 navMeshAgent.SetDestination(target.position);
                 if (Vector3.Distance(transform.position, target.position) <= searchDistance)
                 {
-                    CurrentState = State.Search;
+                    state = State.Search;
                 }
                 break;
 
@@ -80,11 +116,11 @@ public class BullyController : MonoBehaviour
                     }
                     if (foundPlayer)
                     {
-                        CurrentState = State.Attack;
+                        state = State.Attack;
                     }
                     else
                     {
-                        CurrentState = State.Turn;
+                        state = State.Turn;
                     }
                 }
                 break;
@@ -96,25 +132,42 @@ public class BullyController : MonoBehaviour
                 transform.rotation = Quaternion.Euler(0f, smoothedTargetAngle, 0f);
                 if (Vector3.Angle(transform.forward, lookDirection) < searchAngle)
                 {
-                    CurrentState = State.Search;
+                    state = State.Search;
                 }
 
                 if (Vector3.Distance(transform.position, target.position) > searchDistance)
                 {
-                    CurrentState = State.Chase;
+                    SoundManager.Instance.PlaySound(SoundManager.Sound.bullyTaunt, SoundManager.Sound.bullyTauntAlt, transform.position);
+                    state = State.Chase;
                 }
                 break;
 
             case State.Attack:
                 if (canAttack)
                 {
+                    SoundManager.Instance.PlaySound(SoundManager.Sound.bullyAttack, SoundManager.Sound.bullyAttackAlt, transform.position);
+                    animator.SetBool("isWalking", false);
+                    animator.SetTrigger("attack");
                     canAttack = false;
                     meleeAttackSystem.Attack();
                 }
                 else
                 {
-                    CurrentState = State.Search;
+                    state = State.Search;
                 }
+                break;
+
+            case State.Dead:
+                timerDie -= Time.deltaTime;
+                {
+                    if (timerDie <= 0f)
+                    {
+                        GameSceneManager.Load(GameSceneManager.Scene.NegotiationScene);
+                    }
+                }
+                break;
+
+            case State.Wait:
                 break;
         }
 
@@ -146,5 +199,12 @@ public class BullyController : MonoBehaviour
                 timerAttack += timerAttackMax;
             }
         }
+    }
+
+    private void OnDestroy()
+    {
+        StoryboardUI.Instance.OnInactiveStoryboardUI -= StoryboardUI_OnInactiveStoryboardUI;
+
+        PlayerController.OnPlayerDead -= PlayerController_OnPlayerDead;
     }
 }
